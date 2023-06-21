@@ -1,0 +1,68 @@
+#include <stdio.h>
+
+void init(int *year,int *month,int *day){
+    scanf("%d-", year);
+    scanf("%d-", month);
+    scanf("%d", day);
+}
+
+int leapYear(int year){
+    int is_leap_year = 0;
+        if ((year % 100 != 0 && year % 4 == 0) || year % 400 == 0) {
+            is_leap_year = 1;
+        }
+    return is_leap_year;
+}
+
+int prime(int numbers_sum){
+    int is_prime = 1;
+        for (int i = 2; i < numbers_sum; ++i) {
+            if (numbers_sum % i == 0) {
+                is_prime = 0;
+                break;
+            }
+        }
+    return is_prime;
+}
+
+
+void add(int *year,int *month,int *day,int *days){
+        (*day)++;
+        if (*day > days[*month]) {
+            (*month)++;
+            *day= 1;
+        }
+        if (*month > 12) {
+            *month = 1;
+            (*year)++;
+        }
+}
+
+int getNextDay(int *year,int *month,int *day,int* days ){
+    int i,has_prime=0;
+    for(i=0;i<100;++i){
+        if(leapYear(*year)){
+           days[2]=29;
+        }
+        int numbers_sum=*year+*month+*day;
+        if(prime(numbers_sum)){
+           has_prime=1;
+           break;
+        }
+        add(year,month,day,days);
+    }
+    return has_prime;
+}
+
+int main() {
+    int year, month, day;
+    int days[13] = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    init(&year,&month,&day);
+    
+    if (getNextDay(&year,&month,&day,days)) {
+        printf("%04d-%02d-%02d is a prime day.\n", year, month, day);
+    } else {
+        printf("There is no prime day.\n");
+    }
+    return 0;
+}
