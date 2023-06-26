@@ -1,0 +1,61 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int n,m;
+int sum=0;
+char maze[1005][1005];
+int sx = 0,sy = 0;
+int vis[1100][1100];
+int dir[4][2] = { {1,0}, {-1,0}, {0,1}, {0,-1}};
+int cnt;
+
+int  in( int x, int y)
+{
+    return 0 <= x && x < m && 0 <= y && y < n;
+}
+
+void dfs(int x, int y)
+{
+    vis[x][y] = 1;
+    for( int i = 0; i < 4; i++){
+        int tx = x + dir[i][0];
+        int ty = y + dir[i][1];
+        if( in(tx,ty) && !vis[tx][ty] && maze[tx][ty] == '#')
+        {
+            cnt++;
+            dfs(tx,ty);
+        }
+    }
+}
+
+int main()
+{
+    int ans = 0;
+    scanf("%d%d",&m,&n);
+    int i,j;
+    for (i = 0; i < m; i++) {
+         scanf("%s", maze[i]);
+    }
+    
+    for( i = 0; i < m; i++){
+        for(j = 0; j < n; j++){
+            if(maze[i][j] == '#')
+                sum++;
+        }
+    }
+    
+    for( i = 0; i < m; i++){
+        for(j = 0; j < n; j++){
+            if(maze[i][j] == '#' && !vis[i][j]){
+                cnt = 1;
+                sx = i;
+                sy = j;
+                dfs(i, j); 
+                if(cnt>1)
+                    sum=sum-cnt+1;
+            }
+        }
+    }
+    printf("%d",sum);
+    return 0;
+}
